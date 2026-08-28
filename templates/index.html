@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Digital Grievance Intelligence</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7fb;
+            color: #222;
+        }
+
+        /* =========================
+           NAVIGATION BAR
+        ========================= */
+
+        nav {
+            background-color: #123c69;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h2 {
+            color: white;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav ul li a:hover {
+            color: #8ed1fc;
+        }
+
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            min-height: 520px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 50px 20px;
+
+            background: linear-gradient(
+                135deg,
+                #dbeafe,
+                #ffffff
+            );
+        }
+
+        .hero-content {
+            max-width: 850px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: #123c69;
+            margin-bottom: 20px;
+        }
+
+        .hero h2 {
+            font-size: 25px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            margin: 8px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: #123c69;
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: #0b2d4d;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #123c69;
+            border: 2px solid #123c69;
+        }
+
+        .btn-secondary:hover {
+            background-color: #123c69;
+            color: white;
+        }
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        .features {
+            padding: 70px 8%;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 32px;
+            color: #123c69;
+            margin-bottom: 15px;
+        }
+
+        .features-description {
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .card {
+            width: 250px;
+            background-color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: #123c69;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           ABOUT SECTION
+        ========================= */
+
+        .about {
+            padding: 60px 10%;
+            background-color: white;
+            text-align: center;
+        }
+
+        .about h2 {
+            color: #123c69;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .about p {
+            max-width: 850px;
+            margin: auto;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background-color: #123c69;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <nav>
+
+        <h2>
+            Digital Grievance Intelligence
+        </h2>
+
+        <ul>
+
+            <li>
+                <a href="/">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('login') }}">
+                    Login
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('register') }}">
+                    Register
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- =========================
+         HERO SECTION
+    ========================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Digital Grievance Intelligence
+            </h1>
+
+            <h2>
+                Smart Complaint Management System
+            </h2>
+
+            <p>
+
+                A digital platform that helps citizens
+                register, track and manage grievances
+                efficiently using Artificial Intelligence.
+
+            </p>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <a href="{{ url_for('login') }}" class="btn">
+                📝 Submit Grievance
+            </a>
+
+
+            <!-- LOGIN BUTTON FOR TRACKING -->
+
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">
+                🔍 Track Complaint
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FEATURES
+    ========================= -->
+
+    <section class="features">
+
+        <h2>
+            Our Key Features
+        </h2>
+
+        <p class="features-description">
+
+            Making grievance management faster,
+            smarter and more transparent.
+
+        </p>
+
+
+        <div class="cards">
+
+
+            <!-- CARD 1 -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Register Complaint
+                </h3>
+
+                <p>
+
+                    Citizens can easily submit
+                    their complaints online.
+
+                </p>
+
+            </div>
+
+
+            <!-- CARD 2 -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    AI Analysis
+                </h3>
+
+                <p>
+
+                    AI analyzes complaints and
+                    identifies their category.
+
+                </p>
+
+            </div>
+
+
+            <!-- CARD 3 -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🏢
+                </div>
+
+                <h3>
+                    Department Assignment
+                </h3>
+
+                <p>
+
+                    Complaints are automatically
+                    directed to the appropriate
+                    department.
+
+                </p>
+
+            </div>
+
+
+            <!-- CARD 4 -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🔍
+                </div>
+
+                <h3>
+                    Track Complaint
+                </h3>
+
+                <p>
+
+                    Citizens can check their
+                    complaint status anytime.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ABOUT SECTION
+    ========================= -->
+
+    <section class="about">
+
+        <h2>
+            About Our System
+        </h2>
+
+        <p>
+
+            Digital Grievance Intelligence is designed
+            to improve communication between citizens
+            and government authorities. The system uses
+            Artificial Intelligence to classify complaints,
+            identify priorities and help route grievances
+            to the appropriate department.
+
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        <p>
+            © 2026 Digital Grievance Intelligence
+        </p>
+
+        <p>
+            Smart • Fast • Transparent
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>

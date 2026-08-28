@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Complaint Details</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            margin: 0;
+
+            background-color: #f4f6f8;
+
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            background-color: #222;
+
+            color: white;
+
+            padding: 25px;
+
+            text-align: center;
+
+        }
+
+
+        .header h1 {
+
+            margin: 0;
+
+        }
+
+
+        .header h2 {
+
+            margin-top: 10px;
+
+            font-weight: normal;
+
+        }
+
+
+        /* =========================
+           DETAILS CARD
+        ========================= */
+
+        .details-card {
+
+            background-color: white;
+
+            max-width: 900px;
+
+            margin: 40px auto;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 8px #ccc;
+
+        }
+
+
+        .details-card h2 {
+
+            margin-top: 0;
+
+            border-bottom: 2px solid #ddd;
+
+            padding-bottom: 15px;
+
+        }
+
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+
+            margin-top: 25px;
+
+        }
+
+
+        .section h3 {
+
+            color: #222;
+
+            border-bottom: 1px solid #ddd;
+
+            padding-bottom: 8px;
+
+        }
+
+
+        /* =========================
+           INFORMATION
+        ========================= */
+
+        .info-row {
+
+            display: flex;
+
+            padding: 10px 0;
+
+            border-bottom: 1px solid #eee;
+
+        }
+
+
+        .info-label {
+
+            width: 180px;
+
+            font-weight: bold;
+
+        }
+
+
+        .info-value {
+
+            flex: 1;
+
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            border-radius: 5px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .buttons {
+
+            margin-top: 30px;
+
+            text-align: center;
+
+        }
+
+
+        .button {
+
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            margin: 5px;
+
+            border-radius: 6px;
+
+            text-decoration: none;
+
+            color: white;
+
+        }
+
+
+        .back-button {
+
+            background-color: #222;
+
+        }
+
+
+        .back-button:hover {
+
+            background-color: #444;
+
+        }
+
+
+        .delete-button {
+
+            background-color: #d32f2f;
+
+        }
+
+
+        .delete-button:hover {
+
+            background-color: #b71c1c;
+
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <h1>
+            Digital Grievance Intelligence
+        </h1>
+
+        <h2>
+            Complaint Details
+        </h2>
+
+    </div>
+
+
+    <!-- =========================
+         DETAILS CARD
+    ========================= -->
+
+    <div class="details-card">
+
+
+        <h2>
+            {{ complaint.title }}
+        </h2>
+
+
+        <!-- =========================
+             COMPLAINT INFORMATION
+        ========================= -->
+
+        <div class="section">
+
+            <h3>
+                Complaint Information
+            </h3>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Complaint ID:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.complaint_id }}
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Title:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.title }}
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Category:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.category }}
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Description:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.description }}
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Location:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.location }}
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Current Status:
+                </div>
+
+                <div class="info-value">
+
+                    <span class="status">
+
+                        {{ complaint.status }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Submitted:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.created_at }}
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             USER INFORMATION
+        ========================= -->
+
+        <div class="section">
+
+            <h3>
+                User Information
+            </h3>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Name:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.user_name }}
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Email:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.user_email }}
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Phone:
+                </div>
+
+                <div class="info-value">
+                    {{ complaint.user_phone }}
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             BUTTONS
+        ========================= -->
+
+        <div class="buttons">
+
+
+            <a
+                href="{{ url_for('admin_complaints') }}"
+                class="button back-button"
+            >
+
+                Back to Complaints
+
+            </a>
+
+
+            <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="button back-button"
+            >
+
+                Admin Dashboard
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>
