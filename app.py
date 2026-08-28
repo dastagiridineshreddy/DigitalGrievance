@@ -18,10 +18,11 @@ app.secret_key = os.getenv("SECRET_KEY", "digital_grievance_secret_key")
 def get_db_connection():
 
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", ""),
-        database=os.getenv("DB_NAME", "digital_grievance")
+        host=os.getenv("MYSQLHOST", "localhost"),
+        port=int(os.getenv("MYSQLPORT", "3306")),
+        user=os.getenv("MYSQLUSER", "root"),
+        password=os.getenv("MYSQLPASSWORD", ""),
+        database=os.getenv("MYSQLDATABASE", "digital_grievance")
     )
 
 
@@ -1032,4 +1033,4 @@ def admin_logout():
 # RUN APPLICATION
 # =========================================================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
