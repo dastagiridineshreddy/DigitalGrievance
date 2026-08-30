@@ -24,7 +24,45 @@ def get_db_connection():
         database=os.getenv("MYSQLDATABASE"),
         connection_timeout=10
     )
+def create_tables():
+    connection = get_db_connection()
+    cursor = connection.cursor()
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(150) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS complaints (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            description TEXT NOT NULL,
+            category VARCHAR(100),
+            location VARCHAR(255),
+            status VARCHAR(50) DEFAULT 'Pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS admins (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(150) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL
+        )
+    """)
+
+    connection.commit()
+    cursor.close()
+    connection.close()
 
 # =========================================================
 # HOME PAGE
@@ -1033,4 +1071,5 @@ def admin_logout():
 # RUN APPLICATION
 # =========================================================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    create_tables()
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
