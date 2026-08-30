@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
@@ -17,14 +18,21 @@ app.secret_key = os.getenv("SECRET_KEY", "digital_grievance_secret_key")
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.getenv("MYSQLHOST"),
+        host=os.getenv("MYSQLHOST", "localhost"),
         port=int(os.getenv("MYSQLPORT", "3306")),
-        user=os.getenv("MYSQLUSER"),
-        password=os.getenv("MYSQLPASSWORD"),
-        database=os.getenv("MYSQLDATABASE"),
+        user=os.getenv("MYSQLUSER", "root"),
+        password=os.getenv("MYSQLPASSWORD", ""),
+        database=os.getenv("MYSQLDATABASE", "railway"),
         connection_timeout=10
     )
+
+
+# =========================================================
+# CREATE DATABASE TABLES
+# =========================================================
+
 def create_tables():
+
     connection = get_db_connection()
     cursor = connection.cursor()
 
@@ -33,6 +41,7 @@ def create_tables():
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
             email VARCHAR(150) NOT NULL UNIQUE,
+            phone VARCHAR(20),
             password VARCHAR(255) NOT NULL
         )
     """)
@@ -61,8 +70,20 @@ def create_tables():
     """)
 
     connection.commit()
+
     cursor.close()
     connection.close()
+
+
+# =========================================================
+# CREATE TABLES AFTER FUNCTIONS ARE DEFINED
+# =========================================================
+
+try:
+    create_tables()
+except Exception as e:
+    print("Database table creation error:", e)
+
 
 # =========================================================
 # HOME PAGE
@@ -208,19 +229,16 @@ def dashboard():
 @app.route("/complaint", methods=["GET", "POST"])
 def complaint():
 
-    # Check user login
     if "user_id" not in session:
 
         return redirect("/login")
 
     if request.method == "POST":
 
-        # Get form values
         title = request.form.get("title", "").strip()
         category = request.form.get("category", "").strip()
         description = request.form.get("description", "").strip()
         location = request.form.get("location", "").strip()
-
 
         # =====================================================
         # VALIDATION
@@ -242,7 +260,6 @@ def complaint():
 
             return "Complaint location is required."
 
-
         # =====================================================
         # LENGTH VALIDATION
         # =====================================================
@@ -263,14 +280,12 @@ def complaint():
 
             return "Complaint description must be 5000 characters or less."
 
-
         # =====================================================
         # DATABASE CONNECTION
         # =====================================================
 
         connection = get_db_connection()
         cursor = connection.cursor()
-
 
         # =====================================================
         # INSERT COMPLAINT
@@ -282,7 +297,6 @@ def complaint():
         VALUES (%s, %s, %s, %s, %s)
         """
 
-
         values = (
             session["user_id"],
             title,
@@ -291,19 +305,13 @@ def complaint():
             location
         )
 
-
         try:
 
             cursor.execute(sql, values)
 
             connection.commit()
 
-            # =================================================
-            # GET NEW COMPLAINT ID
-            # =================================================
-
             complaint_id = cursor.lastrowid
-
 
         except mysql.connector.Error as error:
 
@@ -311,24 +319,15 @@ def complaint():
 
             return f"Database error: {error}"
 
-
         finally:
 
             cursor.close()
-
             connection.close()
-
-
-        # =====================================================
-        # STEP 25.3
-        # SHOW COMPLAINT SUCCESS PAGE
-        # =====================================================
 
         return render_template(
             "complaint_success.html",
             complaint_id=complaint_id
         )
-
 
     return render_template("complaint.html")
 
@@ -377,24 +376,19 @@ def my_complaints():
 @app.route("/complaint/<int:complaint_id>")
 def user_complaint_details(complaint_id):
 
-    # Check user login
     if "user_id" not in session:
 
         return redirect("/login")
 
-
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
-
-    # Get only this user's complaint
     sql = """
         SELECT *
         FROM complaints
         WHERE id = %s
         AND user_id = %s
     """
-
 
     try:
 
@@ -408,7 +402,6 @@ def user_complaint_details(complaint_id):
 
         complaint = cursor.fetchone()
 
-
     except mysql.connector.Error as error:
 
         cursor.close()
@@ -416,19 +409,15 @@ def user_complaint_details(complaint_id):
 
         return f"Database error: {error}"
 
-
     cursor.close()
     connection.close()
 
-
-    # Complaint not found
     if complaint is None:
 
         return render_template(
             "complaint_details.html",
             complaint=None
         )
-
 
     return render_template(
         "complaint_details.html",
@@ -534,10 +523,7 @@ def admin_dashboard():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-
-    # =====================================================
     # TOTAL COMPLAINTS
-    # =====================================================
 
     cursor.execute(
         "SELECT COUNT(*) AS total FROM complaints"
@@ -545,10 +531,7 @@ def admin_dashboard():
 
     total_complaints = cursor.fetchone()["total"]
 
-
-    # =====================================================
     # PENDING COMPLAINTS
-    # =====================================================
 
     cursor.execute(
         """
@@ -561,10 +544,7 @@ def admin_dashboard():
 
     pending_complaints = cursor.fetchone()["total"]
 
-
-    # =====================================================
     # IN PROGRESS COMPLAINTS
-    # =====================================================
 
     cursor.execute(
         """
@@ -577,10 +557,7 @@ def admin_dashboard():
 
     in_progress_complaints = cursor.fetchone()["total"]
 
-
-    # =====================================================
     # RESOLVED COMPLAINTS
-    # =====================================================
 
     cursor.execute(
         """
@@ -593,10 +570,7 @@ def admin_dashboard():
 
     resolved_complaints = cursor.fetchone()["total"]
 
-
-    # =====================================================
     # CATEGORY-WISE COMPLAINTS
-    # =====================================================
 
     cursor.execute(
         """
@@ -611,18 +585,8 @@ def admin_dashboard():
 
     category_complaints = cursor.fetchall()
 
-
-    # =====================================================
-    # CLOSE DATABASE
-    # =====================================================
-
     cursor.close()
     db.close()
-
-
-    # =====================================================
-    # SEND DATA TO HTML
-    # =====================================================
 
     return render_template(
         "admin_dashboard.html",
@@ -650,39 +614,22 @@ def admin_dashboard():
 @app.route("/admin/complaints")
 def admin_complaints():
 
-    # Check admin login
     if "admin_id" not in session:
 
         return redirect("/admin-login")
-
-
-    # =====================================================
-    # GET SEARCH TEXT
-    # =====================================================
 
     search = request.args.get(
         "search",
         ""
     ).strip()
 
-
-    # =====================================================
-    # GET STATUS FILTER
-    # =====================================================
-
     selected_status = request.args.get(
         "status",
         ""
     ).strip()
 
-
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-
-
-    # =====================================================
-    # BASE SQL
-    # =====================================================
 
     sql = """
         SELECT
@@ -713,13 +660,7 @@ def admin_complaints():
         WHERE 1 = 1
     """
 
-
     values = []
-
-
-    # =====================================================
-    # SEARCH
-    # =====================================================
 
     if search:
 
@@ -752,11 +693,6 @@ def admin_complaints():
             search_value
         ])
 
-
-    # =====================================================
-    # STATUS FILTER
-    # =====================================================
-
     if selected_status:
 
         sql += """
@@ -765,19 +701,9 @@ def admin_complaints():
 
         values.append(selected_status)
 
-
-    # =====================================================
-    # ORDER BY
-    # =====================================================
-
     sql += """
         ORDER BY complaints.created_at DESC
     """
-
-
-    # =====================================================
-    # EXECUTE QUERY
-    # =====================================================
 
     try:
 
@@ -795,18 +721,8 @@ def admin_complaints():
 
         return f"Database error: {error}"
 
-
-    # =====================================================
-    # CLOSE DATABASE
-    # =====================================================
-
     cursor.close()
     connection.close()
-
-
-    # =====================================================
-    # SEND DATA TO HTML
-    # =====================================================
 
     return render_template(
         "admin_complaints.html",
@@ -826,19 +742,12 @@ def admin_complaints():
 @app.route("/admin/complaint/<int:complaint_id>")
 def admin_complaint_details(complaint_id):
 
-    # Check admin login
     if "admin_id" not in session:
 
         return redirect("/admin-login")
 
-
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-
-
-    # =====================================================
-    # GET COMPLAINT DETAILS
-    # =====================================================
 
     sql = """
         SELECT
@@ -871,7 +780,6 @@ def admin_complaint_details(complaint_id):
         WHERE complaints.id = %s
     """
 
-
     try:
 
         cursor.execute(
@@ -881,7 +789,6 @@ def admin_complaint_details(complaint_id):
 
         complaint = cursor.fetchone()
 
-
     except mysql.connector.Error as error:
 
         cursor.close()
@@ -889,19 +796,12 @@ def admin_complaint_details(complaint_id):
 
         return f"Database error: {error}"
 
-
     cursor.close()
     connection.close()
-
-
-    # =====================================================
-    # COMPLAINT NOT FOUND
-    # =====================================================
 
     if complaint is None:
 
         return "Complaint not found"
-
 
     return render_template(
         "admin_complaint_details.html",
@@ -919,19 +819,15 @@ def admin_complaint_details(complaint_id):
 )
 def admin_delete_complaint(complaint_id):
 
-    # Check admin login
     if "admin_id" not in session:
 
         return redirect("/admin-login")
 
-
     connection = get_db_connection()
     cursor = connection.cursor()
 
-
     try:
 
-        # Delete complaint
         cursor.execute(
             """
             DELETE FROM complaints
@@ -942,7 +838,6 @@ def admin_delete_complaint(complaint_id):
 
         connection.commit()
 
-
     except mysql.connector.Error as error:
 
         connection.rollback()
@@ -952,12 +847,9 @@ def admin_delete_complaint(complaint_id):
 
         return f"Database error: {error}"
 
-
     cursor.close()
     connection.close()
 
-
-    # Return to complaint management
     return redirect("/admin/complaints")
 
 
@@ -971,18 +863,11 @@ def admin_delete_complaint(complaint_id):
 )
 def update_complaint(complaint_id):
 
-    # Check admin login
     if "admin_id" not in session:
 
         return redirect("/admin-login")
 
-
     status = request.form.get("status")
-
-
-    # =====================================================
-    # ALLOWED STATUS VALUES
-    # =====================================================
 
     allowed_statuses = [
         "Pending",
@@ -991,15 +876,12 @@ def update_complaint(complaint_id):
         "Rejected"
     ]
 
-
     if status not in allowed_statuses:
 
         return "Invalid complaint status"
 
-
     connection = get_db_connection()
     cursor = connection.cursor()
-
 
     sql = """
     UPDATE complaints
@@ -1008,7 +890,6 @@ def update_complaint(complaint_id):
 
     WHERE id = %s
     """
-
 
     try:
 
@@ -1019,7 +900,6 @@ def update_complaint(complaint_id):
 
         connection.commit()
 
-
     except mysql.connector.Error as error:
 
         connection.rollback()
@@ -1029,10 +909,8 @@ def update_complaint(complaint_id):
 
         return f"Database error: {error}"
 
-
     cursor.close()
     connection.close()
-
 
     return redirect("/admin/complaints")
 
@@ -1044,7 +922,6 @@ def update_complaint(complaint_id):
 @app.route("/logout")
 def logout():
 
-    # Clear user session
     session.pop("user_id", None)
     session.pop("user_name", None)
     session.pop("user_email", None)
@@ -1059,7 +936,6 @@ def logout():
 @app.route("/admin-logout")
 def admin_logout():
 
-    # Clear admin session
     session.pop("admin_id", None)
     session.pop("admin_name", None)
     session.pop("admin_email", None)
@@ -1070,6 +946,11 @@ def admin_logout():
 # =========================================================
 # RUN APPLICATION
 # =========================================================
+
 if __name__ == "__main__":
-    create_tables()
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000)),
+        debug=False
+    )
+
