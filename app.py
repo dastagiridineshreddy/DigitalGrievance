@@ -16,13 +16,13 @@ app.secret_key = os.getenv("SECRET_KEY", "digital_grievance_secret_key")
 # =========================================================
 
 def get_db_connection():
-
     return mysql.connector.connect(
-        host=os.getenv("MYSQLHOST", "localhost"),
+        host=os.getenv("MYSQLHOST"),
         port=int(os.getenv("MYSQLPORT", "3306")),
-        user=os.getenv("MYSQLUSER", "root"),
-        password=os.getenv("MYSQLPASSWORD", ""),
-        database=os.getenv("MYSQLDATABASE", "digital_grievance")
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE"),
+        connection_timeout=10
     )
 
 
