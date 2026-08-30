@@ -300,9 +300,8 @@ def complaint():
 
         sql = """
         INSERT INTO complaints
-        (user_id, title, category, description, location)
-        VALUES (%s, %s, %s, %s, %s)
-        """
+(user_id, title, description, category, location, status, created_at)
+VALUES (%s, %s, %s, %s, %s, %s, NOW())
 
         values = (
             session["user_id"],
