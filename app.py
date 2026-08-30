@@ -17,16 +17,23 @@ app.secret_key = os.getenv("SECRET_KEY", "digital_grievance_secret_key")
 # =========================================================
 
 def get_db_connection():
+    from urllib.parse import urlparse
+
+    database_url = os.getenv("MYSQL_URL")
+
+    if not database_url:
+        raise Exception("MYSQL_URL is not configured")
+
+    url = urlparse(database_url)
+
     return mysql.connector.connect(
-        host=os.getenv("MYSQLHOST", "localhost"),
-        port=int(os.getenv("MYSQLPORT", "3306")),
-        user=os.getenv("MYSQLUSER", "root"),
-        password=os.getenv("MYSQLPASSWORD", ""),
-        database=os.getenv("MYSQLDATABASE", "railway"),
+        host=url.hostname,
+        port=url.port or 3306,
+        user=url.username,
+        password=url.password,
+        database=url.path.lstrip("/"),
         connection_timeout=10
     )
-
-
 # =========================================================
 # CREATE DATABASE TABLES
 # =========================================================
