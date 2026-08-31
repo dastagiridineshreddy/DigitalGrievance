@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
@@ -9,7 +8,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.secret_key = os.getenv("SECRET_KEY", "digital_grievance_secret_key")
+app.secret_key = os.getenv(
+    "SECRET_KEY",
+    "digital_grievance_secret_key"
+)
 
 
 # =========================================================
@@ -17,6 +19,7 @@ app.secret_key = os.getenv("SECRET_KEY", "digital_grievance_secret_key")
 # =========================================================
 
 def get_db_connection():
+
     from urllib.parse import urlparse
 
     database_url = os.getenv("MYSQL_URL")
@@ -34,6 +37,8 @@ def get_db_connection():
         database=url.path.lstrip("/"),
         connection_timeout=10
     )
+
+
 # =========================================================
 # CREATE DATABASE TABLES
 # =========================================================
@@ -83,7 +88,7 @@ def create_tables():
 
 
 # =========================================================
-# CREATE TABLES AFTER FUNCTIONS ARE DEFINED
+# CREATE TABLES
 # =========================================================
 
 try:
@@ -117,12 +122,10 @@ def register():
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
 
-        # Check password confirmation
         if password != confirm_password:
 
             return "Passwords do not match"
 
-        # Hash password
         hashed_password = generate_password_hash(password)
 
         connection = get_db_connection()
@@ -131,9 +134,9 @@ def register():
         try:
 
             sql = """
-            INSERT INTO users
-            (name, email, phone, password)
-            VALUES (%s, %s, %s, %s)
+                INSERT INTO users
+                (name, email, phone, password)
+                VALUES (%s, %s, %s, %s)
             """
 
             values = (
@@ -183,9 +186,9 @@ def login():
         cursor = connection.cursor(dictionary=True)
 
         sql = """
-        SELECT *
-        FROM users
-        WHERE email = %s
+            SELECT *
+            FROM users
+            WHERE email = %s
         """
 
         cursor.execute(sql, (email,))
@@ -242,10 +245,25 @@ def complaint():
 
     if request.method == "POST":
 
-        title = request.form.get("title", "").strip()
-        category = request.form.get("category", "").strip()
-        description = request.form.get("description", "").strip()
-        location = request.form.get("location", "").strip()
+        title = request.form.get(
+            "title",
+            ""
+        ).strip()
+
+        category = request.form.get(
+            "category",
+            ""
+        ).strip()
+
+        description = request.form.get(
+            "description",
+            ""
+        ).strip()
+
+        location = request.form.get(
+            "location",
+            ""
+        ).strip()
 
         # =====================================================
         # VALIDATION
@@ -299,21 +317,34 @@ def complaint():
         # =====================================================
 
         sql = """
-        INSERT INTO complaints
-(user_id, title, description, category, location, status, created_at)
-VALUES (%s, %s, %s, %s, %s, %s, NOW())
+            INSERT INTO complaints
+            (
+                user_id,
+                title,
+                description,
+                category,
+                location,
+                status,
+                created_at
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, NOW())
+        """
 
         values = (
             session["user_id"],
             title,
-            category,
             description,
-            location
+            category,
+            location,
+            "Pending"
         )
 
         try:
 
-            cursor.execute(sql, values)
+            cursor.execute(
+                sql,
+                values
+            )
 
             connection.commit()
 
@@ -353,10 +384,10 @@ def my_complaints():
     cursor = connection.cursor(dictionary=True)
 
     sql = """
-    SELECT *
-    FROM complaints
-    WHERE user_id = %s
-    ORDER BY created_at DESC
+        SELECT *
+        FROM complaints
+        WHERE user_id = %s
+        ORDER BY id DESC
     """
 
     cursor.execute(
@@ -446,10 +477,10 @@ def complaint_status():
     cursor = connection.cursor(dictionary=True)
 
     sql = """
-    SELECT *
-    FROM complaints
-    WHERE user_id = %s
-    ORDER BY created_at DESC
+        SELECT *
+        FROM complaints
+        WHERE user_id = %s
+        ORDER BY created_at DESC
     """
 
     cursor.execute(
@@ -484,9 +515,9 @@ def admin_login():
         cursor = connection.cursor(dictionary=True)
 
         sql = """
-        SELECT *
-        FROM admins
-        WHERE email = %s
+            SELECT *
+            FROM admins
+            WHERE email = %s
         """
 
         cursor.execute(
@@ -541,9 +572,9 @@ def admin_dashboard():
 
     cursor.execute(
         """
-        SELECT COUNT(*) AS total
-        FROM complaints
-        WHERE status = %s
+            SELECT COUNT(*) AS total
+            FROM complaints
+            WHERE status = %s
         """,
         ("Pending",)
     )
@@ -554,9 +585,9 @@ def admin_dashboard():
 
     cursor.execute(
         """
-        SELECT COUNT(*) AS total
-        FROM complaints
-        WHERE status = %s
+            SELECT COUNT(*) AS total
+            FROM complaints
+            WHERE status = %s
         """,
         ("In Progress",)
     )
@@ -567,9 +598,9 @@ def admin_dashboard():
 
     cursor.execute(
         """
-        SELECT COUNT(*) AS total
-        FROM complaints
-        WHERE status = %s
+            SELECT COUNT(*) AS total
+            FROM complaints
+            WHERE status = %s
         """,
         ("Resolved",)
     )
@@ -580,12 +611,12 @@ def admin_dashboard():
 
     cursor.execute(
         """
-        SELECT
-            category,
-            COUNT(*) AS total
-        FROM complaints
-        GROUP BY category
-        ORDER BY total DESC
+            SELECT
+                category,
+                COUNT(*) AS total
+            FROM complaints
+            GROUP BY category
+            ORDER BY total DESC
         """
     )
 
@@ -596,19 +627,12 @@ def admin_dashboard():
 
     return render_template(
         "admin_dashboard.html",
-
         admin_name=session["admin_name"],
-
         admin_email=session["admin_email"],
-
         total_complaints=total_complaints,
-
         pending_complaints=pending_complaints,
-
         in_progress_complaints=in_progress_complaints,
-
         resolved_complaints=resolved_complaints,
-
         category_complaints=category_complaints
     )
 
@@ -672,19 +696,12 @@ def admin_complaints():
 
         sql += """
             AND (
-
                 complaints.title LIKE %s
-
                 OR complaints.category LIKE %s
-
                 OR complaints.description LIKE %s
-
                 OR complaints.location LIKE %s
-
                 OR users.name LIKE %s
-
                 OR users.email LIKE %s
-
             )
         """
 
@@ -732,11 +749,8 @@ def admin_complaints():
 
     return render_template(
         "admin_complaints.html",
-
         complaints=complaints,
-
         selected_status=selected_status,
-
         search=search
     )
 
@@ -836,8 +850,8 @@ def admin_delete_complaint(complaint_id):
 
         cursor.execute(
             """
-            DELETE FROM complaints
-            WHERE id = %s
+                DELETE FROM complaints
+                WHERE id = %s
             """,
             (complaint_id,)
         )
@@ -890,18 +904,19 @@ def update_complaint(complaint_id):
     cursor = connection.cursor()
 
     sql = """
-    UPDATE complaints
-
-    SET status = %s
-
-    WHERE id = %s
+        UPDATE complaints
+        SET status = %s
+        WHERE id = %s
     """
 
     try:
 
         cursor.execute(
             sql,
-            (status, complaint_id)
+            (
+                status,
+                complaint_id
+            )
         )
 
         connection.commit()
@@ -954,9 +969,9 @@ def admin_logout():
 # =========================================================
 
 if __name__ == "__main__":
+
     app.run(
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000)),
         debug=False
     )
-
