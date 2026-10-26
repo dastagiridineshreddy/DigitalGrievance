@@ -1,16 +1,11 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Register - Digital Grievance Intelligence</title>
-
     <style>
-
         * {
             box-sizing: border-box;
             font-family: Arial, sans-serif;
@@ -18,14 +13,15 @@
 
         body {
             margin: 0;
+            padding: 20px;
             background: #f4f7fb;
         }
 
         .container {
-            width: 400px;
-            margin: 60px auto;
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 30px;
             background: white;
-            padding: 35px;
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
@@ -33,7 +29,6 @@
         h1 {
             text-align: center;
             color: #123c69;
-            margin-bottom: 25px;
         }
 
         label {
@@ -58,96 +53,48 @@
             color: white;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
             cursor: pointer;
-        }
-
-        button:hover {
-            background: #0b2d4d;
         }
 
         .login-link {
             text-align: center;
             margin-top: 20px;
         }
-
     </style>
-
 </head>
-
 <body>
-
     <div class="container">
-
         <h1>Create Account</h1>
 
         <form method="POST">
+            <label for="name">Full Name</label>
+            <input id="name" type="text" name="name"
+                   placeholder="Enter your full name" required>
 
-            <label>Full Name</label>
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email"
+                   placeholder="Enter your email" required>
 
-            <input
-                type="text"
-                name="name"
-                placeholder="Enter your full name"
-                required
-            >
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="text" name="phone"
+                   placeholder="Enter your phone number" required>
 
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password"
+                   placeholder="Enter your password" required>
 
-            <label>Email</label>
+            <label for="confirm_password">Confirm Password</label>
+            <input id="confirm_password" type="password"
+                   name="confirm_password"
+                   placeholder="Confirm your password" required>
 
-            <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                required
-            >
-
-
-            <label>Phone Number</label>
-
-            <input
-                type="text"
-                name="phone"
-                placeholder="Enter your phone number"
-                required
-            >
-
-
-            <label>Password</label>
-
-            <input
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                required
-            >
-
-
-            <label>Confirm Password</label>
-
-            <input
-                type="password"
-                name="confirm_password"
-                placeholder="Confirm your password"
-                required
-            >
-
-
-            <button type="submit">
-                Register
-            </button>
-
+            <button type="submit">Register</button>
         </form>
 
         <div class="login-link">
-
             Already have an account?
-           <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('login') }}">Login</a>
         </div>
-
     </div>
-
 </body>
-
 </html>
-
