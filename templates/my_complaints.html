@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>My Complaints</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            background-color: #222;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+
+        /* =========================
+           PAGE TITLE
+        ========================= */
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #666;
+        }
+
+
+        /* =========================
+           COMPLAINT CARD
+        ========================= */
+
+        .complaint-card {
+
+            background-color: white;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 8px #ccc;
+
+        }
+
+
+        .complaint-card h3 {
+
+            margin-top: 0;
+
+            margin-bottom: 15px;
+
+            font-size: 24px;
+
+        }
+
+
+        .complaint-card p {
+
+            line-height: 1.6;
+
+            margin: 8px 0;
+
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+        }
+
+
+        .pending {
+
+            background-color: #fff3cd;
+
+            color: #856404;
+
+        }
+
+
+        .in-progress {
+
+            background-color: #cfe2ff;
+
+            color: #084298;
+
+        }
+
+
+        .resolved {
+
+            background-color: #d1e7dd;
+
+            color: #0f5132;
+
+        }
+
+
+        .rejected {
+
+            background-color: #f8d7da;
+
+            color: #842029;
+
+        }
+
+
+        /* =========================
+           VIEW STATUS BUTTON
+        ========================= */
+
+        .status-button {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 10px 18px;
+
+            background-color: #1976d2;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 5px;
+
+            font-weight: bold;
+
+        }
+
+
+        .status-button:hover {
+
+            background-color: #125aa0;
+
+        }
+
+
+        /* =========================
+           NO COMPLAINTS
+        ========================= */
+
+        .no-complaints {
+
+            background-color: white;
+
+            padding: 40px;
+
+            text-align: center;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 8px #ccc;
+
+        }
+
+
+        .no-complaints h3 {
+
+            margin-top: 0;
+
+        }
+
+
+        .no-complaints p {
+
+            color: #666;
+
+        }
+
+
+        /* =========================
+           SUBMIT COMPLAINT BUTTON
+        ========================= */
+
+        .submit-button {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 10px 18px;
+
+            background-color: #2e7d32;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 5px;
+
+            font-weight: bold;
+
+        }
+
+
+        .submit-button:hover {
+
+            background-color: #1b5e20;
+
+        }
+
+
+        /* =========================
+           BACK BUTTON
+        ========================= */
+
+        .back-link {
+
+            text-align: center;
+
+            margin: 35px 0;
+
+        }
+
+
+        .back-link a {
+
+            display: inline-block;
+
+            background-color: #222;
+
+            color: white;
+
+            padding: 12px 20px;
+
+            border-radius: 6px;
+
+            text-decoration: none;
+
+        }
+
+
+        .back-link a:hover {
+
+            background-color: #444;
+
+        }
+
+
+        /* =========================
+           MOBILE RESPONSIVE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .container {
+
+                padding: 0 10px;
+
+            }
+
+            .complaint-card {
+
+                padding: 18px;
+
+            }
+
+            .complaint-card h3 {
+
+                font-size: 20px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <h1>
+            Digital Grievance Intelligence
+        </h1>
+
+        <p>
+            My Complaints
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         MAIN CONTAINER
+    ========================= -->
+
+    <div class="container">
+
+
+        <!-- =========================
+             PAGE TITLE
+        ========================= -->
+
+        <div class="page-title">
+
+            <h2>
+                My Complaints
+            </h2>
+
+            <p>
+                View all complaints submitted by you.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             COMPLAINT LIST
+        ========================= -->
+
+        {% if complaints %}
+
+
+            {% for complaint in complaints %}
+
+
+                <div class="complaint-card">
+
+
+                    <!-- TITLE -->
+
+                    <h3>
+                        {{ complaint.title }}
+                    </h3>
+
+
+                    <!-- COMPLAINT ID -->
+
+                    <p>
+
+                        <strong>
+                            Complaint ID:
+                        </strong>
+
+                        {{ complaint.id }}
+
+                    </p>
+
+
+                    <!-- CATEGORY -->
+
+                    <p>
+
+                        <strong>
+                            Category:
+                        </strong>
+
+                        {{ complaint.category }}
+
+                    </p>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <p>
+
+                        <strong>
+                            Description:
+                        </strong>
+
+                        {{ complaint.description }}
+
+                    </p>
+
+
+                    <!-- LOCATION -->
+
+                    <p>
+
+                        <strong>
+                            Location:
+                        </strong>
+
+                        {{ complaint.location }}
+
+                    </p>
+
+
+                    <!-- STATUS -->
+
+                    <p>
+
+                        <strong>
+                            Current Status:
+                        </strong>
+
+
+                        {% if complaint.status == "Pending" %}
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        {% elif complaint.status == "In Progress" %}
+
+                            <span class="status in-progress">
+                                In Progress
+                            </span>
+
+                        {% elif complaint.status == "Resolved" %}
+
+                            <span class="status resolved">
+                                Resolved
+                            </span>
+
+                        {% elif complaint.status == "Rejected" %}
+
+                            <span class="status rejected">
+                                Rejected
+                            </span>
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ complaint.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- SUBMITTED DATE -->
+
+                    <p>
+
+                        <strong>
+                            Submitted:
+                        </strong>
+
+                        {{ complaint.created_at }}
+
+                    </p>
+
+
+                    <!-- VIEW STATUS BUTTON -->
+
+ <a
+    href="{{ url_for('user_complaint_details', complaint_id=complaint.id) }}"
+    class="status-button"
+>
+
+    View Details
+
+</a>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <!-- =========================
+                 NO COMPLAINTS
+            ========================= -->
+
+            <div class="no-complaints">
+
+                <h3>
+                    No Complaints Found
+                </h3>
+
+                <p>
+                    You have not submitted any complaints yet.
+                </p>
+
+
+                <a
+                    href="/complaint"
+                    class="submit-button"
+                >
+
+                    Submit a Complaint
+
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+        <!-- =========================
+             BACK TO DASHBOARD
+        ========================= -->
+
+        <div class="back-link">
+
+            <a href="/dashboard">
+
+                Back to Dashboard
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>

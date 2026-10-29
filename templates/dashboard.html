@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>User Dashboard - Digital Grievance Intelligence</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            margin: 0;
+
+            background-color: #f4f6f8;
+
+            color: #222;
+
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            background-color: #222;
+
+            color: white;
+
+            padding: 25px;
+
+            text-align: center;
+
+        }
+
+
+        .header h1 {
+
+            margin: 0;
+
+            font-size: 30px;
+
+        }
+
+
+        .header p {
+
+            margin-top: 8px;
+
+            font-size: 16px;
+
+        }
+
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .container {
+
+            max-width: 1000px;
+
+            margin: 30px auto;
+
+            padding: 0 20px;
+
+        }
+
+
+        /* =========================
+           WELCOME CARD
+        ========================= */
+
+        .welcome-card {
+
+            background-color: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 8px #ccc;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .welcome-card h2 {
+
+            margin-top: 0;
+
+        }
+
+
+        .welcome-card p {
+
+            line-height: 1.6;
+
+        }
+
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .section-title {
+
+            text-align: center;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .actions {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 20px;
+
+        }
+
+
+        .action-card {
+
+            background-color: white;
+
+            padding: 25px;
+
+            text-align: center;
+
+            border-radius: 10px;
+
+            box-shadow: 0 2px 8px #ccc;
+
+        }
+
+
+        .action-card h3 {
+
+            margin-top: 0;
+
+        }
+
+
+        .action-card p {
+
+            line-height: 1.5;
+
+            color: #555;
+
+        }
+
+
+        .button {
+
+            display: inline-block;
+
+            padding: 11px 18px;
+
+            margin-top: 10px;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =========================
+           SUBMIT BUTTON
+        ========================= */
+
+        .submit-button {
+
+            background-color: #388e3c;
+
+        }
+
+
+        .submit-button:hover {
+
+            background-color: #2e7d32;
+
+        }
+
+
+        /* =========================
+           MY COMPLAINTS BUTTON
+        ========================= */
+
+        .complaints-button {
+
+            background-color: #1976d2;
+
+        }
+
+
+        .complaints-button:hover {
+
+            background-color: #125aa0;
+
+        }
+
+
+        /* =========================
+           STATUS BUTTON
+        ========================= */
+
+        .status-button {
+
+            background-color: #7b1fa2;
+
+        }
+
+
+        .status-button:hover {
+
+            background-color: #6a1b9a;
+
+        }
+
+
+        /* =========================
+           LOGOUT
+        ========================= */
+
+        .logout-area {
+
+            text-align: center;
+
+            margin-top: 35px;
+
+        }
+
+
+        .logout-button {
+
+            background-color: #d32f2f;
+
+            padding: 12px 25px;
+
+        }
+
+
+        .logout-button:hover {
+
+            background-color: #b71c1c;
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 750px) {
+
+            .actions {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .header h1 {
+
+                font-size: 24px;
+
+            }
+
+
+            .container {
+
+                padding: 0 10px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <h1>
+            Digital Grievance Intelligence
+        </h1>
+
+        <p>
+            User Dashboard
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         MAIN CONTAINER
+    ========================= -->
+
+    <div class="container">
+
+
+        <!-- =========================
+             WELCOME
+        ========================= -->
+
+        <div class="welcome-card">
+
+            <h2>
+
+                Welcome, {{ name }}!
+
+            </h2>
+
+
+            <p>
+
+                You are successfully logged in.
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Email:
+                </strong>
+
+                {{ email }}
+
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             ACTION TITLE
+        ========================= -->
+
+        <h2 class="section-title">
+
+            Complaint Services
+
+        </h2>
+
+
+        <!-- =========================
+             ACTION CARDS
+        ========================= -->
+
+        <div class="actions">
+
+
+            <!-- SUBMIT COMPLAINT -->
+
+            <div class="action-card">
+
+                <h3>
+
+                    Submit Complaint
+
+                </h3>
+
+
+                <p>
+
+                    Report a new problem or grievance
+                    to the concerned department.
+
+                </p>
+
+
+                <a
+                    href="{{ url_for('complaint') }}"
+                    class="button submit-button"
+                >
+
+                    Submit Complaint
+
+                </a>
+
+            </div>
+
+
+            <!-- MY COMPLAINTS -->
+
+            <div class="action-card">
+
+                <h3>
+
+                    My Complaints
+
+                </h3>
+
+
+                <p>
+
+                    View all complaints that you
+                    have submitted.
+
+                </p>
+
+
+                <a
+                    href="{{ url_for('my_complaints') }}"
+                    class="button complaints-button"
+                >
+
+                    My Complaints
+
+                </a>
+
+            </div>
+
+
+            <!-- COMPLAINT STATUS -->
+
+            <div class="action-card">
+
+                <h3>
+
+                    Complaint Status
+
+                </h3>
+
+
+                <p>
+
+                    Track the current status of your
+                    submitted complaints.
+
+                </p>
+
+
+                <a
+                    href="{{ url_for('complaint_status') }}"
+                    class="button status-button"
+                >
+
+                    Track Status
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             LOGOUT
+        ========================= -->
+
+        <div class="logout-area">
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="button logout-button"
+            >
+
+                Logout
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>
